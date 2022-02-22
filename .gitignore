@@ -23,6 +23,6 @@
 hs_err_pid*
 
 .idea/
-**/camunda-bpm-run-ee-7.16.5-ee(1)/*
+**/camunda-bpm-run-ee-7.16.5-ee (1)/*
 **/node_modules/*
 **/target
