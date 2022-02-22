@@ -21,6 +21,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-camunda-bpm-run-ee-7.16.5-ee(1)/*
-NodeJSWorker/node_modules/*
-*/target
+
+.idea/
+camunda-bpm-run-ee-7.16.5-ee(1)/
+node_modules/
+target/
