@@ -15,8 +15,14 @@ const client = new Client(config);
 // susbscribe to the topic: 'creditScoreChecker'
 client.subscribe("chargeCredit", async function({task, taskService}) {
 	try{
+		const amount = task.variables.get("amount");
+		const remaining = task.variables.get("remaining");
 		console.log("Charging Credit Card...");
-		await taskService.complete(task);
+		
+		const processVariables = new Variables();
+		processVariables.set("remaining", 0.0);
+		
+		await taskService.complete(task, processVariables);
 	}catch(err){
 		console.log(err);
 	}
