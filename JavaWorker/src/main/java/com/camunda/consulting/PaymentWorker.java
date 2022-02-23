@@ -20,6 +20,8 @@ public class PaymentWorker {
             lockDuration = 10000L)
     public ExternalTaskHandler deductCredit(){
         return (((externalTask, externalTaskService) -> {
+            Integer retries = externalTask.getRetries();
+            if(retries == null) retries = 3;
             HashMap<String, Object> variables = new HashMap<>();
 
             log.info("Starting deducting credit");
@@ -38,9 +40,13 @@ public class PaymentWorker {
                 variables.put("creditSufficient", true);
                 variables.put("balance", balance-amount);
             }
+            boolean shouldFail = externalTask.getVariable("shouldFail");
 
-
-            externalTaskService.complete(externalTask, variables);
+            if(shouldFail){
+                externalTaskService.handleFailure(externalTask, "ErrorMessage", "ErrorDetails have to be here. Something is wrong", retries-1, 60000L);
+            }else{
+                externalTaskService.complete(externalTask, variables);
+            }
             log.info("ExternalTask {} has been completed.", externalTask.getId());
         }));
     }
