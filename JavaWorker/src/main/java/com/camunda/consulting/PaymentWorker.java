@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +85,10 @@ public class PaymentWorker {
                 paymentType = "CreditCard";
             }
 
+            HashMap<String, Object> paymentTypeMap = new HashMap<>();
+            paymentTypeMap.put("value", paymentType);
+            paymentTypeMap.put("type", "String");
+
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -92,7 +97,7 @@ public class PaymentWorker {
             map.put("messageName", "paymentReceived");
             map.put("businessKey", externalTask.getBusinessKey());
             //Map.of only works on Java >= 9
-            map.put("processVariables", Map.of("paymentType", paymentType));
+            map.put("processVariables", Collections.singletonMap("paymentType", paymentTypeMap));
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
 
