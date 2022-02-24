@@ -100,7 +100,6 @@ public class PaymentWorker {
             map.put("processVariables", Collections.singletonMap("paymentType", paymentTypeMap));
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
-
             ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:8080/engine-rest/message", entity, String.class);
 
             if (responseEntity.getStatusCode() != HttpStatus.NO_CONTENT) {
