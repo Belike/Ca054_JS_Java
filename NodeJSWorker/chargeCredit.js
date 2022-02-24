@@ -17,12 +17,18 @@ client.subscribe("chargeCredit", async function({task, taskService}) {
 	try{
 		const amount = task.variables.get("amount");
 		const remaining = task.variables.get("remaining");
+		const shouldBpmnError = task.variables.get("shouldBpmnError");
 		console.log("Charging Credit Card...");
 		
 		const processVariables = new Variables();
 		processVariables.set("remaining", 0.0);
 		
+	if(shouldBpmnError) {
+		console.log("BPMN Error will be produced!");
+		await taskService.handleBpmnError(task, "chargeFailed", "Charging failed, because of technical difficulties");
+	}else {
 		await taskService.complete(task, processVariables);
+	}
 	}catch(err){
 		console.log(err);
 	}

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.client.spring.SpringTopicSubscription;
 import org.camunda.bpm.client.spring.event.SubscriptionInitializedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +15,17 @@ import javax.annotation.PostConstruct;
 public class Subscriptions implements ApplicationListener<SubscriptionInitializedEvent> {
 
     @Autowired
-    public SpringTopicSubscription deductCredit;
+    public SpringTopicSubscription deductCreditSubscription;
+
+    @Autowired
+    public SpringTopicSubscription compensateBalanceSubscription;
 
     @PostConstruct
     public void listSubscriptionBeans() {
-        log.info("Subscription bean 'invoiceCreatorHandlerSubscription' has topic name: {} ",
-                deductCredit.getTopicName());
+        log.info("Subscription bean 'deductCredit' has topic name: {} ",
+                deductCreditSubscription.getTopicName());
+        log.info("Subscription bean 'deductCredit' has topic name: {} ",
+                compensateBalanceSubscription.getTopicName());
     }
 
     @Override

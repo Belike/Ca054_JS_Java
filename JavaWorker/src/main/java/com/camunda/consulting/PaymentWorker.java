@@ -5,6 +5,7 @@ import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.HashMap;
 
@@ -14,12 +15,11 @@ public class PaymentWorker {
 
     final String baseUrl = "http://localhost:8080/engine-rest/message";
 
-    @Bean
-    @ExternalTaskSubscription(
-            topicName = "deductCredit",
-            lockDuration = 10000L)
+    @Primary
+    @Bean(name = "deductCredit")
+    @ExternalTaskSubscription("deductCredit")
     public ExternalTaskHandler deductCredit(){
-        return (((externalTask, externalTaskService) -> {
+        return (externalTask, externalTaskService) -> {
             Integer retries = externalTask.getRetries();
             if(retries == null) retries = 3;
             HashMap<String, Object> variables = new HashMap<>();
@@ -48,6 +48,6 @@ public class PaymentWorker {
                 externalTaskService.complete(externalTask, variables);
             }
             log.info("ExternalTask {} has been completed.", externalTask.getId());
-        }));
+        };
     }
 }
