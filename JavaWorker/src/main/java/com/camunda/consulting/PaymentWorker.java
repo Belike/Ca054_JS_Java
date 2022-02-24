@@ -15,7 +15,6 @@ public class PaymentWorker {
 
     final String baseUrl = "http://localhost:8080/engine-rest/message";
 
-    @Primary
     @Bean(name = "deductCredit")
     @ExternalTaskSubscription("deductCredit")
     public ExternalTaskHandler deductCredit(){
