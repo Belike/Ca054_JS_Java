@@ -8,16 +8,13 @@
       <bpmn:outgoing>Flow_0lat3j5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_05waahf" sourceRef="Activity_11iczbw" targetRef="Gateway_0htmfsh" />
-    <bpmn:sequenceFlow id="Flow_1h5j4rk" name="Yes" sourceRef="Gateway_0htmfsh" targetRef="Event_0whqsls">
+    <bpmn:sequenceFlow id="Flow_1h5j4rk" name="Yes" sourceRef="Gateway_0htmfsh" targetRef="PaymentEndEvent_Balance">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${creditSufficient}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0lat3j5" name="No" sourceRef="Gateway_0htmfsh" targetRef="Activity_0wiz27y">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${not creditSufficient}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="Event_0u6f3dp" name="Payment completed by Credit Card">
-      <bpmn:incoming>Flow_1cqk5zy</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1cqk5zy" sourceRef="Activity_0wiz27y" targetRef="Event_0u6f3dp" />
+    <bpmn:sequenceFlow id="Flow_1cqk5zy" sourceRef="Activity_0wiz27y" targetRef="PaymentEndEvent_CreditCard" />
     <bpmn:serviceTask id="Activity_11iczbw" name="Deduct existing credit" camunda:type="external" camunda:topic="deductCredit">
       <bpmn:incoming>Flow_0xaegjc</bpmn:incoming>
       <bpmn:outgoing>Flow_05waahf</bpmn:outgoing>
@@ -30,9 +27,6 @@
       <bpmn:outgoing>Flow_0xaegjc</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_10kvi13" messageRef="Message_0kjd6hb" />
     </bpmn:startEvent>
-    <bpmn:endEvent id="Event_0whqsls" name="Payment completed by balance">
-      <bpmn:incoming>Flow_1h5j4rk</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_1kwr0i7" attachedToRef="Activity_11iczbw">
       <bpmn:compensateEventDefinition id="CompensateEventDefinition_0q31utw" />
     </bpmn:boundaryEvent>
@@ -45,6 +39,14 @@
     <bpmn:endEvent id="Event_18t9cbm">
       <bpmn:incoming>Flow_11suuo8</bpmn:incoming>
       <bpmn:compensateEventDefinition id="CompensateEventDefinition_1tt106c" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="PaymentEndEvent_Balance" name="Payment completed by balance">
+      <bpmn:incoming>Flow_1h5j4rk</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0j4n84y" camunda:type="external" camunda:topic="finishPayment" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="PaymentEndEvent_CreditCard" name="Payment completed by Credit Card">
+      <bpmn:incoming>Flow_1cqk5zy</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0i9jon9" camunda:type="external" camunda:topic="finishPayment" />
     </bpmn:endEvent>
     <bpmn:association id="Association_1fa1kw4" associationDirection="One" sourceRef="Event_1kwr0i7" targetRef="Activity_0x2ysz5" />
   </bpmn:process>
@@ -84,18 +86,12 @@
       <bpmndi:BPMNEdge id="Flow_11suuo8_di" bpmnElement="Flow_11suuo8">
         <di:waypoint x="800" y="348" />
         <di:waypoint x="800" y="410" />
-        <di:waypoint x="872" y="410" />
+        <di:waypoint x="972" y="410" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_0htmfsh_di" bpmnElement="Gateway_0htmfsh" isMarkerVisible="true">
         <dc:Bounds x="425" y="102" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="409" y="78" width="82" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0u6f3dp_di" bpmnElement="Event_0u6f3dp">
-        <dc:Bounds x="972" y="272" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="957" y="315" width="66" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0loqt07_di" bpmnElement="Activity_11iczbw">
@@ -110,17 +106,23 @@
           <dc:Bounds x="155" y="152" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1pwu6of_di" bpmnElement="Event_0whqsls">
+      <bpmndi:BPMNShape id="Activity_0ytu8fu_di" bpmnElement="Activity_0x2ysz5">
+        <dc:Bounds x="260" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1318k58_di" bpmnElement="Event_18t9cbm">
+        <dc:Bounds x="972" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0krn6g2_di" bpmnElement="PaymentEndEvent_Balance">
         <dc:Bounds x="972" y="109" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="957" y="152" width="66" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ytu8fu_di" bpmnElement="Activity_0x2ysz5">
-        <dc:Bounds x="260" y="270" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1318k58_di" bpmnElement="Event_18t9cbm">
-        <dc:Bounds x="872" y="392" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_0bkit34_di" bpmnElement="PaymentEndEvent_CreditCard">
+        <dc:Bounds x="972" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="957" y="315" width="66" height="40" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0hotnd0_di" bpmnElement="Event_1kwr0i7">
         <dc:Bounds x="292" y="149" width="36" height="36" />

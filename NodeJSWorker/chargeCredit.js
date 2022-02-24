@@ -17,7 +17,8 @@ client.subscribe("chargeCredit", async function({task, taskService}) {
 	try{
 		const amount = task.variables.get("amount");
 		const remaining = task.variables.get("remaining");
-		const shouldBpmnError = task.variables.get("shouldBpmnError");
+		const shouldBpmnError = false;
+		//task.variables.get("shouldBpmnError");
 		console.log("Charging Credit Card...");
 		
 		const processVariables = new Variables();
